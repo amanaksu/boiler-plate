@@ -15,9 +15,9 @@ app.use(bodyParser.urlencoded({extended: true}));   // application/x-www-form-ur
 app.use(bodyParser.json());                         // application/json 데이터를 가져올 수 있도록 설정
 
 // Set MongoDB 
-const password = "1234qwer";
+const config = require("./config/key");
 const mongoose = require("mongoose");
-mongoose.connect(`mongodb+srv://Kei:${password}@boiler-plate-sdh1y.mongodb.net/test?retryWrites=true&w=majority`, {
+mongoose.connect(config.mongoDB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
