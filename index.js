@@ -26,7 +26,7 @@ mongoose.connect(`mongodb+srv://Kei:${password}@boiler-plate-sdh1y.mongodb.net/t
 
 // Front-End : App 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hi!!')
 });
 
 // Route "회원가입"
