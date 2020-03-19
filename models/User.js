@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
 
 
 const userSchema = mongoose.Schema({
@@ -34,6 +33,7 @@ const userSchema = mongoose.Schema({
     }
 });
 
+const saltRounds = 10;
 userSchema.pre("save", function( next ) {
     // Pre-processing
 
@@ -55,8 +55,20 @@ userSchema.pre("save", function( next ) {
                 });
             }
         });
+    } else {
+        next();
     }
 });
+
+userSchema.methods.comparePassword = function(plainPassword, callback) {
+    // plainPassword 1234567  
+    // Encrypted Password $2b$10$dbgLhyJ7tK.sz7fCcP0aRebXzp8LS1IVaWJGciaRug1BCWQJ1Ty.i
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
+        if (err) {
+            return callback(err), callback(null, isMatch);
+        }
+    });
+};
 
 const User = mongoose.model("User", userSchema);
 
