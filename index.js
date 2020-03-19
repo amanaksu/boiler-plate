@@ -2,9 +2,9 @@
 // From : http://expressjs.com/en/starter/hello-world.html
 
 // Set Default Env Using ExpressJS  
-const express = require('express')
-const app = express()
-const port = 5000
+const express = require('express');
+const app = express();
+const port = 5000;
 
 // Set MongoDB 
 const password = "3584ksu";
