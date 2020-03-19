@@ -14,6 +14,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));   // application/x-www-form-urlencoded 데이터를 가져올 수 있도록 설정
 app.use(bodyParser.json());                         // application/json 데이터를 가져올 수 있도록 설정
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());                           // cookie 데이터를 가져올 수 있도록 설정
+
 // Set MongoDB 
 const config = require("./config/key");
 const mongoose = require("mongoose");
@@ -70,7 +73,16 @@ app.post("/login", (req, res) => {
                 } else {
                     // (비밀번호가 일치하면) 사용자 토큰을 생성한다. 
                     user.generateToken((err, user) => {
-                        
+                        if (err) {
+                            return res.status(400).send(err);
+                        } else {
+                            // 토큰을 저장한다. 
+                            // Where? Cookies, Local Storage, .....
+                            res.cookie("x_auth", user.token).status(200).json({
+                                loginSuccess: true,
+                                userId: user._id
+                            });                            
+                        }
                     });
                 }
             });

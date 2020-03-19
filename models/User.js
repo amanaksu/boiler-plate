@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 
 const userSchema = mongoose.Schema({
@@ -65,9 +66,25 @@ userSchema.methods.comparePassword = function(plainPassword, callback) {
     // Encrypted Password $2b$10$dbgLhyJ7tK.sz7fCcP0aRebXzp8LS1IVaWJGciaRug1BCWQJ1Ty.i
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
         if (err) {
-            return callback(err), callback(null, isMatch);
+            return callback(err);
+        } else {
+            return callback(null, isMatch);
         }
     });
+};
+
+userSchema.methods.generateToken = function(callback) {
+    // 토큰 생성
+    let user = this;
+    const token = jwt.sign(user._id.toHexString(), "secretToken");
+    user.token = token;
+    user.save(function(err, user) {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, user);
+        }
+    })
 };
 
 const User = mongoose.model("User", userSchema);
