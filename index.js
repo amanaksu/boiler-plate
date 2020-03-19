@@ -1,25 +1,21 @@
-// Hello-World
-// From : http://expressjs.com/en/starter/hello-world.html
+const express = require('express');
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+
+const config = require("./config/key");
+const { User } = require("./models/User");          
+const { auth } = require("./middleware/auth");
 
 // Set Default Env Using ExpressJS  
-const express = require('express');
 const app = express();
 const port = 5000;
 
-// Get User Schema 
-const { User } = require("./models/User");
-
-// Get Body-Parser & Set Options
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));   // application/x-www-form-urlencoded 데이터를 가져올 수 있도록 설정
 app.use(bodyParser.json());                         // application/json 데이터를 가져올 수 있도록 설정
-
-const cookieParser = require("cookie-parser");
 app.use(cookieParser());                           // cookie 데이터를 가져올 수 있도록 설정
 
 // Set MongoDB 
-const config = require("./config/key");
-const mongoose = require("mongoose");
 mongoose.connect(config.mongoDB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -33,7 +29,7 @@ app.get('/', (req, res) => {
 });
 
 // Route "회원가입"
-app.post("/register", (req, res) => {
+app.post("/api/user/register", (req, res) => {
     // 회원 가입시 필요한 정보를 Client에서 가져오면
     // 정보를 DB에 넣어준다. 
 
@@ -54,7 +50,7 @@ app.post("/register", (req, res) => {
 
 
 // Route "로그인"
-app.post("/login", (req, res) => {
+app.post("/api/user/login", (req, res) => {
     // 요청된 이메일을 DB 에서 찾는다. 
     User.findOne({ email: req.body.email }, (err, user) => {
         if (!user) {
@@ -89,6 +85,24 @@ app.post("/login", (req, res) => {
         }
     });
 });
+
+
+// Route "Auth"
+app.get("/api/user/auth", auth, (req, res) => {
+    // 여기까지 middleware 를 통과해 왔다면 Authentication 이 True 임.
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image
+    });
+});
+
+
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
