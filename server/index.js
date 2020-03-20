@@ -87,7 +87,7 @@ app.post("/api/user/login", (req, res) => {
 });
 
 
-// Route "Auth"
+// Route "인증"
 app.get("/api/user/auth", auth, (req, res) => {
     // 여기까지 middleware 를 통과해 왔다면 Authentication 이 True 임.
     res.status(200).json({
@@ -103,6 +103,21 @@ app.get("/api/user/auth", auth, (req, res) => {
 });
 
 
+// Route "로그아웃"
+app.get("/api/user/logout", auth, (req, res) => {
+    User.findOneAndUpdate({ _id: req.user._id }, {token: ""}, (err, user) => {
+        if (err) {
+            return res.json({
+                success: false,
+                err
+            });
+        } else {
+            return res.status(200).send({
+                success: true
+            });
+        }
+    });
+});
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
