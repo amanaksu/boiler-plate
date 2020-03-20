@@ -9,7 +9,6 @@ const { auth } = require("./middleware/auth");
 
 // Set Default Env Using ExpressJS  
 const app = express();
-const port = 5000;
 
 app.use(bodyParser.urlencoded({extended: true}));   // application/x-www-form-urlencoded 데이터를 가져올 수 있도록 설정
 app.use(bodyParser.json());                         // application/json 데이터를 가져올 수 있도록 설정
@@ -25,8 +24,18 @@ mongoose.connect(config.mongoDB_URI, {
 
 // Front-End : App 
 app.get('/', (req, res) => {
-    res.send('Hi!!')
+    res.send('Hi!!');
 });
+
+
+// Test Code Start
+app.get("/api/hello", (req, res) => {
+    res.send("Hi~")
+});
+
+// Test Code End
+
+
 
 // Route "회원가입"
 app.post("/api/user/register", (req, res) => {
@@ -120,4 +129,5 @@ app.get("/api/user/logout", auth, (req, res) => {
 });
 
 
+const port = 5000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
