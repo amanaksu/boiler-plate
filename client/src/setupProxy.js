@@ -11,6 +11,8 @@
 //   );
 // };
 
+// Proxy 사용 방법이 변경됨
+
 // 참고 : https://www.npmjs.com/package/http-proxy-middleware
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
