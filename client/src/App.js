@@ -2,8 +2,8 @@ import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
+  // Link
 } from "react-router-dom";
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
