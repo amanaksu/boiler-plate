@@ -87,7 +87,8 @@ userSchema.methods.generateToken = function(callback) {
     })
 };
 
-userSchema.static.findByToken = function(token, callback) {
+
+userSchema.statics.findByToken = function(token, callback) {
     let user = this;
 
     // 토큰을 디코딩한다. 
